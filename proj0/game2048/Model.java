@@ -182,10 +182,8 @@ public class Model extends Observable {
             } else {
                 originalRow -= side.originaldCol();
             }
-
-
         }
-
+        checkGameOver();
     }
 
 
