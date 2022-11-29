@@ -66,4 +66,21 @@ public enum Side {
     /** Parameters describing this Side, as documented in the comment at the
      *  start of this class. */
     private final int _row0, _col0, _drow, _dcol;
+
+    /** Returns original Column.*/
+    public int originalCol() {
+        return _col0;
+    }
+    /**Returns original Row.*/
+    public int originalRow() {
+        return _row0;
+    }
+    /**Returns column delta.*/
+    public int originaldCol() {
+        return _dcol;
+    }
+    /**Returns row delta.*/
+    public int originaldRow() {
+        return _drow;
+    }
 }
