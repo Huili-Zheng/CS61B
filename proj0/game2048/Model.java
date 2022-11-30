@@ -2,6 +2,8 @@ package game2048;
 
 import java.util.Formatter;
 import java.util.Observable;
+//import java.util.ArrayList;
+//import java.util.List;
 
 
 /** The state of a game of 2048.
@@ -104,7 +106,6 @@ public class Model extends Observable {
     }
 
     /** Tilt the board toward SIDE.
-     *
      * 1. If two Tile objects are adjacent in the direction of motion and have
      *    the same value, they are merged into one Tile of twice the original
      *    value and that new value is added to the score instance variable
@@ -165,6 +166,7 @@ public class Model extends Observable {
         }
     }
 
+
     public void tilt(Side side) {
         // TODO: Fill in this function.
         side = Side.opposite(side);
@@ -185,6 +187,115 @@ public class Model extends Observable {
         }
         checkGameOver();
     }
+//    /** Redundancy method for tile */
+//    public void tilt(Side side) {
+//        // TODO: Fill in this function.
+//        List<Tile> change_tile = new ArrayList<Tile>();
+//
+//        if (side == Side.NORTH) {
+//            for (int c = 0; c < _board.size(); c += 1) {
+//                int up = 0;
+//                for (int r = _board.size() - 1; r >= 0; r -= 1) {
+//                    Tile t = _board.tile(c, r);
+//                    if (t == null) {
+//                        up += 1;
+//                    } else {
+//                        _board.move(c, r + up, t);
+//                        if (r + up == _board.size() - 1) {
+//                            continue;
+//                        }
+//                        Tile curr_t = _board.tile(c, r + up);
+//                        Tile next_t = _board.tile(c, r + up + 1);
+//                        if (!change_tile.contains(next_t)
+//                                && t.value() == next_t.value()
+//                                && _board.move(c, r + up + 1, curr_t)) {
+//                            change_tile.add(_board.tile(c, r + up + 1));
+//                            _score += _board.tile(c, r + up + 1).value();
+//                            up += 1;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if (side == Side.SOUTH) {
+//            for (int c = 0; c < _board.size(); c += 1) {
+//                int down = 0;
+//                for (int r = 0; r < _board.size(); r += 1) {
+//                    Tile t = _board.tile(c, r);
+//                    if (t == null) {
+//                        down += 1;
+//                    }
+//                    else {
+//                        _board.move(c, r - down, t);
+//                        if (r - down == 0) {
+//                            continue;
+//                        }
+//                        Tile curr_t = _board.tile(c, r - down);
+//                        Tile next_t = _board.tile(c, r - down - 1);
+//                        if (!change_tile.contains(next_t)
+//                                && t.value() == next_t.value()
+//                                && _board.move(c, r - down - 1, curr_t)) {
+//                            change_tile.add(_board.tile(c, r - down - 1));
+//                            _score += _board.tile(c, r - down - 1).value();
+//                            down += 1;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if (side == Side.EAST) {
+//            for (int r = 0; r < _board.size(); r += 1) {
+//                int right = 0;
+//                for (int c = _board.size() - 1; c >= 0; c -= 1) {
+//                    Tile t = _board.tile(c, r);
+//                    if (t == null) {
+//                        right += 1;
+//                    }
+//                    else {
+//                        _board.move(c + right, r, t);
+//                        if (c + right == _board.size() - 1) {
+//                            continue;
+//                        }
+//                        Tile curr_t = _board.tile(c + right, r);
+//                        Tile next_t = _board.tile(c + right + 1, r);
+//                        if (!change_tile.contains(next_t)
+//                                && t.value() == _board.tile(c + right + 1, r).value()
+//                                && _board.move(c + right + 1, r, curr_t)) {
+//                            change_tile.add(_board.tile(c + right + 1, r));
+//                            _score += _board.tile(c + right +1, r).value();
+//                            right += 1;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if (side == Side.WEST) {
+//            for (int r = 0; r < _board.size(); r += 1) {
+//                int left = 0;
+//                for (int c = 0; c < _board.size(); c += 1) {
+//                    Tile t = _board.tile(c, r);
+//                    if (t == null) {
+//                        left += 1;
+//                    } else {
+//                        _board.move(c - left, r, t);
+//                        if (c - left == 0) {
+//                            continue;
+//                        }
+//                        Tile curr_t = _board.tile(c - left, r);
+//                        Tile next_t = _board.tile(c - left - 1, r);
+//                        if (!change_tile.contains(next_t) && c - left > 0
+//                                && t.value() == _board.tile(c - left - 1, r).value()
+//                                && _board.move(c - left - 1, r, curr_t)) {
+//                            change_tile.add(_board.tile(c - left - 1, r));
+//                            _score += _board.tile(c - left - 1, r).value();
+//                            left += 1;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        checkGameOver();
+//    }
 
 
     /** Checks if the game is over and sets the gameOver variable
