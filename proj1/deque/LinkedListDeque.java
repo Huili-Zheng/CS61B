@@ -1,7 +1,5 @@
 package deque;
 
-import javax.swing.*;
-import java.util.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -47,9 +45,6 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         size += 1;
     }
 
-    public boolean isEmpty() {
-        return (size == 0);
-    }
 
     public int size() {
         return size;
@@ -130,11 +125,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         int current = 0;
 
         public boolean hasNext() {
-            if (current < size) {
-                return true;
-            } else {
-                return false;
-            }
+            return current < size;
         }
 
         public T next() {
@@ -158,15 +149,11 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         if (o == null) {
             return false;
         }
-        if (o instanceof LinkedListDeque) {
-            LinkedListDeque oL = (LinkedListDeque<T>) o;
-            if (oL.size == size) {
-                ItemNode p = sentinel;
-                ItemNode p1 = oL.sentinel;
+        if (o instanceof Deque) {
+            Deque oD = (Deque<T>) o;
+            if (oD.size() == size) {
                 for (int i = 0; i < size; i += 1) {
-                    p = p.next;
-                    p1 = p1.next;
-                    if (p.item != p1.item) {
+                    if (!(get(i).equals(oD.get(i)))) {
                         return false;
                     }
                 }
@@ -178,14 +165,14 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
 
     public static void main(String[] args) {
         LinkedListDeque<Integer> lld = new LinkedListDeque<>();
-        lld.addFirst(10);
+        lld.addFirst(1515);
         lld.addFirst(9);
         lld.addFirst(8);
 
         LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
         lld2.addLast(8);
         lld2.addLast(9);
-        lld2.addLast(10);
+        lld2.addLast(1515);
 
         lld.printDeque();
 
