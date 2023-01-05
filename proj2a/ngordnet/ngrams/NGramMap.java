@@ -19,12 +19,14 @@ import java.util.Scanner;
  * @author Josh Hug
  */
 public class NGramMap {
-    public TimeSeries total;
-    public List<String> NGrams;
-    public List<TimeSeries> NGramTS;
+    public TimeSeries total; // Timeseries of total corpus of data
+    public List<String> NGrams; // List of the specified word
+    public List<TimeSeries> NGramTS; // List of Timeseries of the specified word
 
     /**
      * Constructs an NGramMap from WORDSFILENAME and COUNTSFILENAME.
+     * @param wordsFilename
+     * @param countsFilename
      */
     public NGramMap(String wordsFilename, String countsFilename) {
         In wordsFile = new In(wordsFilename);
