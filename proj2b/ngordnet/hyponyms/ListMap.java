@@ -41,11 +41,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     public void putOneValue(K key, V value) {
-        List<V> list = map.get(key);
-        if (list == null) {
-            list = new ArrayList<>();
-            map.put(key, list);
-        }
+        List<V> list = map.computeIfAbsent(key, k -> new ArrayList<>());
         list.add(value);
     }
 
