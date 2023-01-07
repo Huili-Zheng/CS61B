@@ -8,7 +8,6 @@ import java.util.*;
 public class HyponymGraph {
 
     private final int V;
-
     private List<Integer>[] adj;
 
 
@@ -32,6 +31,9 @@ public class HyponymGraph {
         return adj[v];
     }
 
+    public boolean hasEdge(int v, int w) {
+        return adj[v].contains(w);
+    }
 
     public int size() {
         return V;
