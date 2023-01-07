@@ -7,10 +7,14 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class TestDepthFirstPaths {
-    @Test
-    public void TestDepthFirstPaths() {
-        // create a graph and add some nodes and edges
-        HyponymGraph graph = new HyponymGraph(11);
+
+    public DepthFirstPaths createTestPath() {
+        HyponymGraph graph = new HyponymGraph();
+
+        for (int i = 0; i < 11; i++) {
+            graph.addVertex(i);
+        }
+
         graph.addEdge(0, 1);
         graph.addEdge(1, 2);
         graph.addEdge(1, 3);
@@ -21,14 +25,27 @@ public class TestDepthFirstPaths {
         graph.addEdge(8, 10);
         graph.addEdge(9, 10);
 
-        // create a DepthFirstPaths object and test the hasPathTo and pathTo methods
-        DepthFirstPaths paths = new DepthFirstPaths(graph,0);
-        assertTrue(paths.hasPathTo(1));
-        assertEquals(Arrays.asList(2,1,0), paths.pathTo(2));
-        assertTrue(paths.hasPathTo(0));
+        return new DepthFirstPaths(graph, 0);
+    }
 
+
+    @Test
+    public void TestPaths() {
+        // create a DepthFirstPaths object
+        DepthFirstPaths path = createTestPath();
+
+        // test the hasPathTo and pathTo methods
+        assertTrue(path.hasPathTo(1));
+        assertEquals(Arrays.asList(2, 1, 0), path.pathTo(2));
+        assertTrue(path.hasPathTo(0));
+
+    }
+
+    @Test
+    public void TestConnectedComponent() {
+        DepthFirstPaths path = createTestPath();
         // test connectedComponent()
-        assertEquals(Set.of(8, 10), paths.connectedComponent(8));
+        assertEquals(Set.of(8, 10), path.connectedComponent(8));
     }
 
 
