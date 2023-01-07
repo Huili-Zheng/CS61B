@@ -27,7 +27,7 @@ public class HyponymsHandler extends NgordnetQueryHandler {
         System.out.println("Words: " + q.words());
 
         String returnString = new String();
-        Set<String> intersectionHyponyms = wn.getIntersection(q.words());
+        List<String> intersectionHyponyms = wn.getIntersection(q.words());
 
         returnString = String.join(" ", intersectionHyponyms);
     return returnString;
