@@ -3,9 +3,7 @@ package ngordnet.hyponyms;
 import edu.princeton.cs.algs4.In;
 
 import java.util.*;
-
-import static java.util.Collections.*;
-
+import java.util.stream.Collectors;
 
 public class WordNet {
     private HyponymGraph graph; // Store the hyponyms relationship data as a graph
@@ -16,97 +14,119 @@ public class WordNet {
 
     /**
      * Create a wordNet with graph and map
-     * @param synsetsFilename
-     * @param hypnoymsFilename
+     * @param synsetsFilename the name of synsetsFile
+     * @param hypnoymsFilename the name of hypnoymsFile
      */
     public WordNet(String synsetsFilename, String hypnoymsFilename) {
         In synsetsFile = new In(synsetsFilename);
         In hypnoymsFile = new In(hypnoymsFilename);
 
-        Integer V = Integer. valueOf(synsetsFilename.replaceAll("[^0-9]", ""));
-        graph = new HyponymGraph(V);
+        graph = new HyponymGraph();
+        // graph gets the node goes with that index given an integer
         synsetsMap = new ListMap<Integer, List<String>>();
+        // synsetsMap gets the words given a word id
         wordsMap = new ListMap<String, List<Integer>>();
+        // wordsMap gets the word ids point that word given a word
 
+        structureSynsets(synsetsFile);
+        structureHyponyms(hypnoymsFile);
+    }
+
+    private void structureSynsets(In synsetsFile) {
         while (!synsetsFile.isEmpty()) {
             String token = synsetsFile.readLine();
             String[] arrOfStr = token.split(",");
-            int word_id = Integer.valueOf(arrOfStr[0]);
-            String[] words = arrOfStr[1].split(" ");;
+            int word_id = Integer.parseInt(arrOfStr[0]); // word id
+            String[] words = arrOfStr[1].split(" "); // one or multiple words
+
             synsetsMap.put(word_id, List.of(words));
+            // synsetsMap store word id as key, store wordList that contains one or multiple word as value
             for (String word : words) {
                 wordsMap.putOneValue(word, word_id);
             }
+            // wordsMap store word as key, store wordList that contains one or multiple word id as value
         }
+    }
 
+    private void structureHyponyms(In hypnoymsFile) {
         while (!hypnoymsFile.isEmpty()) {
             String token = hypnoymsFile.readString();
             String[] arrOfStr = token.split(",");
-            int word_id = Integer.valueOf(arrOfStr[0]);
+            int word_id = Integer.parseInt(arrOfStr[0]);
             int[] hypnoym_ids = new int[arrOfStr.length - 1];
             for (int i = 0; i < arrOfStr.length - 1; i++) {
                 hypnoym_ids[i] = Integer.parseInt((arrOfStr[1 + i]));
             }
+
+            graph.addVertex(word_id);
             for (int hypnoym_id : hypnoym_ids) {
+                graph.addVertex(hypnoym_id);
                 graph.addEdge(word_id, hypnoym_id);
             }
+            // graph store the wordId as vertex, store their relation as edge
         }
-    }
-
-    public Set<String> getIntersection(List<String> words) {
-        Set<String>[] sortedHyponyms = (HashSet<String>[]) new HashSet<?>[words.size()];
-//        List<String>[] sortedHyponyms = (ArrayList<String>[]) new ArrayList<?>[words.size()];
-        for (int i = 0; i < words.size(); i++) {
-            sortedHyponyms[i] = getSortedHyponyms(words.get(i));
-        }
-        Set<String> hyponymsIntersection = sortedHyponyms[0];
-        for (Set<String> hyponymsSorted : sortedHyponyms) {
-            hyponymsIntersection.retainAll(hyponymsSorted);
-        }
-        return hyponymsIntersection;
     }
 
     /**
-     * Return all hyponyms of the specified word given the word
-     * @param s_word the word id
-     * @return all hyponyms of the specified word
+     * Return the sorted intersection of the hyponyms given the words
+     * @param words the words
+     * @return the intersection of the sorted hyponyms
      */
-    public Set<String> getSortedHyponyms(String s_word) {
-        List<Integer> wordIds = wordsMap.get(s_word);
-        List<String> hyponymsSorted = new ArrayList<>();
-        for (int wordId : wordIds) {
-            HashSet<Integer> hyponymIds = getHyponymIds(wordId);
-            List<String> hyponyms = getHyponymsById(hyponymIds);
-            hyponymsSorted.addAll(hyponyms);
+    public List<String> getIntersection(List<String> words) {
+        List<String>[] hyponymsSynsets = (ArrayList<String>[]) new ArrayList<?>[words.size()];
+        // hyponymsSynsets store the list of hyponyms of each words
+
+        for (int i = 0; i < words.size(); i++) {
+            hyponymsSynsets[i] = getHyponymsSynsets(words.get(i));
         }
-        return sortHyponyms(hyponymsSorted);
+        // return all hyponyms of the synsets
+
+        List<String> hyponymsIntersection = hyponymsSynsets[0];
+        // hyponymsIntersection store the sorted intersection of the list of hyponyms
+
+        for (List<String> hyponymsSynset : hyponymsSynsets) {
+            hyponymsIntersection.retainAll(hyponymsSynset);
+        }
+        return sortHyponyms(hyponymsIntersection);
     }
 
-    // Return all hyponymIDs of the specified word given the word id
+    // Return all hyponyms of the synsets given the word
+    private List<String> getHyponymsSynsets(String s_word) {
+        List<Integer> wordIds = wordsMap.get(s_word); // get the lists of hyponymIds of one synset
+        List<String> hyponymsSynsets = new ArrayList<>();
+
+        for (int wordId : wordIds) {
+            HashSet<Integer> hyponymIds = getHyponymIds(wordId); // get the hyponymIds for a word
+            List<String> hyponyms = getHyponymsById(hyponymIds); // get the hyponyms of one synset
+            hyponymsSynsets.addAll(hyponyms); // get all the hyponyms of synsets
+        }
+        return hyponymsSynsets;
+    }
+
+    // Return all hyponymIDs of the word given the word id
     private HashSet<Integer> getHyponymIds(int s) {
         DepthFirstPaths dfs = new DepthFirstPaths(graph, s);
-        HashSet<Integer> hyponymIds = dfs.connectedComponent(s);
-        return hyponymIds;
+        return dfs.connectedComponent(s);
     }
 
     // Return all hyponyms of the specified hyponymIDs
     private List<String> getHyponymsById(HashSet<Integer>hyponymIds) {
         List<String> hyponyms = new ArrayList<>();
+
         for (int hyponymId : hyponymIds) {
-            for (String hyponym:  (List<String>)synsetsMap.get(hyponymId)) {
-                hyponyms.add(hyponym);
-            }
+            hyponyms.addAll((List<String>) synsetsMap.get(hyponymId));
         }
         return hyponyms;
     }
 
     // Return the sorted set in alphabetical order
-    private Set<String> sortHyponyms(List<String> hyponyms) {
+    private List<String> sortHyponyms(List<String> hyponyms) {
+        // remove the redundancy items in the hyponyms
+        List<String> distinctHyponyms = hyponyms.stream().distinct().collect(Collectors.toList());
         // sort the list in alphabetical order
-        Collections.sort(hyponyms);
+        Collections.sort(distinctHyponyms);
         // cast a sorted list to a set with the same order
-        Set<String> hyponymsSorted = new LinkedHashSet<>(hyponyms);
-        return hyponymsSorted;
+        return distinctHyponyms;
     }
 
 
