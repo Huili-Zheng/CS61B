@@ -4,6 +4,8 @@ import edu.princeton.cs.algs4.In;
 
 import java.util.*;
 
+import static java.util.Collections.*;
+
 
 public class WordNet {
     private HyponymGraph graph; // Store the hyponyms relationship data as a graph
@@ -51,6 +53,19 @@ public class WordNet {
         }
     }
 
+    public Set<String> getIntersection(List<String> words) {
+        Set<String>[] sortedHyponyms = (HashSet<String>[]) new HashSet<?>[words.size()];
+//        List<String>[] sortedHyponyms = (ArrayList<String>[]) new ArrayList<?>[words.size()];
+        for (int i = 0; i < words.size(); i++) {
+            sortedHyponyms[i] = getSortedHyponyms(words.get(i));
+        }
+        Set<String> hyponymsIntersection = sortedHyponyms[0];
+        for (Set<String> hyponymsSorted : sortedHyponyms) {
+            hyponymsIntersection.retainAll(hyponymsSorted);
+        }
+        return hyponymsIntersection;
+    }
+
     /**
      * Return all hyponyms of the specified word given the word
      * @param s_word the word id
@@ -58,13 +73,13 @@ public class WordNet {
      */
     public Set<String> getSortedHyponyms(String s_word) {
         List<Integer> wordIds = wordsMap.get(s_word);
-        Set<String> hyponymsSorted = new HashSet<>();
+        List<String> hyponymsSorted = new ArrayList<>();
         for (int wordId : wordIds) {
             HashSet<Integer> hyponymIds = getHyponymIds(wordId);
             List<String> hyponyms = getHyponymsById(hyponymIds);
-            hyponymsSorted.addAll(sortHyponyms(hyponyms));
+            hyponymsSorted.addAll(hyponyms);
         }
-        return hyponymsSorted;
+        return sortHyponyms(hyponymsSorted);
     }
 
     // Return all hyponymIDs of the specified word given the word id
@@ -86,14 +101,12 @@ public class WordNet {
     }
 
     // Return the sorted set in alphabetical order
-    private List<String> sortHyponyms(List<String> hyponyms) {
-        hyponyms.sort(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
-            }
-        });
-        return hyponyms;
+    private Set<String> sortHyponyms(List<String> hyponyms) {
+        // sort the list in alphabetical order
+        Collections.sort(hyponyms);
+        // cast a sorted list to a set with the same order
+        Set<String> hyponymsSorted = new LinkedHashSet<>(hyponyms);
+        return hyponymsSorted;
     }
 
 
