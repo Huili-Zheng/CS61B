@@ -2,11 +2,11 @@ package ngordnet.hyponyms;
 import java.util.*;
 
 /**
- * An object for mapping a word to its all hyponyms.
+ * An object for mapping a K to its all V.
  */
-public class HyponymMap implements Map<Integer, List<String>> {
-    private Map<Integer, List<String>> map;
-    public HyponymMap() {
+public class ListMap<K, V> implements Map<K, List<V>> {
+    private Map<K, List<V>> map;
+    public ListMap() {
         map = new HashMap<>();
     }
 
@@ -31,22 +31,32 @@ public class HyponymMap implements Map<Integer, List<String>> {
     }
 
     @Override
-    public List<String> get(Object key) {
+    public List<V> get(Object key) {
         return map.get(key);
     }
 
     @Override
-    public List<String> put(Integer key, List<String> value) {
+    public List<V> put(K key, List<V> value) {
         return map.put(key, value);
     }
 
+    public void putOneValue(K key, V value) {
+        List<V> list = map.get(key);
+        if (list == null) {
+            list = new ArrayList<>();
+            map.put(key, list);
+        }
+        list.add(value);
+    }
+
+
     @Override
-    public List<String> remove(Object key) {
+    public List<V> remove(Object key) {
         return map.remove(key);
     }
 
     @Override
-    public void putAll(Map<? extends Integer, ? extends List<String>> m) {
+    public void putAll(Map<? extends K, ? extends List<V>> m) {
         map.putAll(m);
     }
 
@@ -56,17 +66,17 @@ public class HyponymMap implements Map<Integer, List<String>> {
     }
 
     @Override
-    public Set<Integer> keySet() {
+    public Set<K> keySet() {
         return map.keySet();
     }
 
     @Override
-    public Collection<List<String>> values() {
+    public Collection<List<V>> values() {
         return map.values();
     }
 
     @Override
-    public Set<Entry<Integer, List<String>>> entrySet() {
+    public Set<Map.Entry<K, List<V>>>  entrySet() {
         return map.entrySet();
     }
 
