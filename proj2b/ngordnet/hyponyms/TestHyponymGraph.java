@@ -2,16 +2,18 @@ package ngordnet.hyponyms;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestHyponymGraph {
-    @Test
-    public void TestHyponymGraph() {
-        HyponymGraph graph = new HyponymGraph(11);
+
+    public HyponymGraph createTestGraph() {
+        HyponymGraph graph = new HyponymGraph();
+
+        for (int i = 0; i < 11; i++) {
+            graph.addVertex(i);
+        }
 
         graph.addEdge(0, 1);
         graph.addEdge(1, 2);
@@ -21,15 +23,23 @@ public class TestHyponymGraph {
         graph.addEdge(8, 10);
         graph.addEdge(9, 10);
 
+        return graph;
+    }
+    @Test
+    public void TestEdge() {
+        HyponymGraph graph = createTestGraph();
+
         assertFalse(graph.hasEdge(10, 9));
-        assertTrue(graph.hasEdge(0,1));
-        assertTrue(graph.hasEdge(1,2));
+        assertTrue(graph.hasEdge(0, 1));
+        assertTrue(graph.hasEdge(1, 2));
 
+    }
 
-        List<Integer> expected = new ArrayList<>();
-        expected.add(6);
-        expected.add(7);
-        assertEquals(expected, graph.adj(5));
+    @Test
+    public void TestAdj() {
+        HyponymGraph graph = createTestGraph();
+
+        assertEquals(Arrays.asList(6,7), graph.getAdj(5));
 
     }
 
