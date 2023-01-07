@@ -27,7 +27,7 @@ public class TestDepthFirstPaths {
         assertEquals(Arrays.asList(2,1,0), paths.pathTo(2));
         assertTrue(paths.hasPathTo(0));
 
-        // test ReachNodes()
+        // test connectedComponent()
         assertEquals(Set.of(8, 10), paths.connectedComponent(8));
     }
 
