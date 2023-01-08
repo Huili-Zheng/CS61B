@@ -124,9 +124,4 @@ public class WordNet {
         // remove the redundancy items in the hyponyms. sort the list in alphabetical order
         return hyponyms.stream().distinct().sorted().collect(Collectors.toList());
     }
-
-
-
-
-
 }
