@@ -120,13 +120,9 @@ public class WordNet {
     }
 
     // Return the sorted set in alphabetical order
-    private List<String> sortHyponyms(List<String> hyponyms) {
-        // remove the redundancy items in the hyponyms
-        List<String> distinctHyponyms = hyponyms.stream().distinct().collect(Collectors.toList());
-        // sort the list in alphabetical order
-        Collections.sort(distinctHyponyms);
-        // cast a sorted list to a set with the same order
-        return distinctHyponyms;
+    public List<String> sortHyponyms(List<String> hyponyms) {
+        // remove the redundancy items in the hyponyms. sort the list in alphabetical order
+        return hyponyms.stream().distinct().sorted().collect(Collectors.toList());
     }
 
 
