@@ -15,13 +15,18 @@ public class HyponymGraph {
     public HyponymGraph() {
         vertices = new ArrayList<>();
         adj = new ArrayList<>();
+        adj.add(new ArrayList<>());
     }
 
     // add a vertex to the graph
     public void addVertex(int v) {
         vertices.add(v);
-        // add an empty list to store the edges of the vertex
-        adj.add(new ArrayList<>());
+        // adj has v lists to store the edges of v vertexes
+        if (adj.size() <= v) {
+            for (int i = 0; i <= v-adj.size(); i++) {
+                adj.add(new ArrayList<>());
+            }
+        }
     }
 
     // add an edge between two vertices
