@@ -30,13 +30,15 @@ public class PlusWorld {
         }
     }
 
+    /**
+     * Draw a square of tiles to the board, anchored at a given position
+     */
     public static void drawSquare(TETile[][] tiles ,Position p, TETile tile, int size) {
         for (int dy = 0; dy > -size; dy--) {
             Position start = p.shift(0, dy);
             drawRow(tiles, start, tile, size);
         }
     }
-
 
 
     /**
@@ -71,7 +73,9 @@ public class PlusWorld {
         addPlusHelper(tiles, p, tile, size);
     }
 
-
+    /**
+     * Add NUM plus in row to the world at position P of size {CODE size}
+     */
     public static void addPlusRow(TETile[][] tiles, Position p, int size, int num ) {
         if (num < 1) {
             return;
@@ -86,31 +90,40 @@ public class PlusWorld {
         }
     }
 
-    public static void addPlusDiagonalHelper(TETile[][] tiles, Position p, int size ) {
-        for (int i = 0; i<HEIGHT; i += 7*size) {
-            addPlusRow(tiles, p, size, WIDTH / (size * (1 + size)));
+    private static void addPlusDiagonalHelper(TETile[][] tiles, Position p, int size ) {
 
-            Position rightBottomNeighbor = getRightBottomNeighbor(p, size);
-            addPlusRow(tiles, rightBottomNeighbor, size, WIDTH / (size * (1 + size)));
+        addPlusRow(tiles, p, size, WIDTH / (size * (1 + size)) + 1);
 
-
-            Position rightTopNeighbor = getRightTopNeighbor(p, size);
-            addPlusRow(tiles, rightTopNeighbor, size, WIDTH / (size * (1 + size)));
-
-            Position leftBottomNeighbor = getLeftBottomNeighbor(p, size);
-            addPlusRow(tiles, leftBottomNeighbor, size, WIDTH / (size * (1 + size)));
+        Position rightBottomNeighbor = getRightBottomNeighbor(p, size);
+        addPlusRow(tiles, rightBottomNeighbor, size, WIDTH / (size * (1 + size))+ 1);
 
 
-            Position leftTopNeighbor = getLeftTopNeighbor(p, size);
-            addPlusRow(tiles, leftTopNeighbor, size, WIDTH / (size * (1 + size)));
+        Position rightTopNeighbor = getRightTopNeighbor(p, size);
+        addPlusRow(tiles, rightTopNeighbor, size, WIDTH / (size * (1 + size))+ 1);
 
-            p = p.shift(0, size * (3 + size));
-        }
+        Position leftBottomNeighbor = getLeftBottomNeighbor(p, size);
+        addPlusRow(tiles, leftBottomNeighbor, size, WIDTH / (size * (1 + size))+ 1);
+
+
+        Position leftTopNeighbor = getLeftTopNeighbor(p, size);
+        addPlusRow(tiles, leftTopNeighbor, size, WIDTH / (size * (1 + size))+ 1);
+
     }
 
+    /**
+     * Add plus diagonally to the world at position P of size {CODE size}
+     */
     public static void addPlusDiagonal(TETile[][] tiles, Position p, int size) {
-        addPlusDiagonalHelper(tiles, p, size);
-
+        Position p_top = p;
+        for (int i = 0; i<HEIGHT; i += 5*size) {
+            addPlusDiagonalHelper(tiles, p_top, size);
+            p_top = p_top.shift(0, size * (5));
+        }
+        Position p_bottom = p;
+        for (int i = p.y; i>=0; i -= 5*size) {
+            addPlusDiagonalHelper(tiles, p_bottom, size);
+            p_bottom = p_bottom.shift(0, -size * (5));
+        }
     }
 
     private static Position getRightNeighbor(Position p, int size) {
@@ -184,7 +197,7 @@ public class PlusWorld {
     public static void drawWorld(TETile[][] tiles) {
         fillWithNothing(tiles);
         Position p = new Position(0,40);
-        addPlusDiagonal(tiles, p, 2);
+        addPlusDiagonal(tiles, p, 5);
     }
 
     public static void main(String[] args) {
